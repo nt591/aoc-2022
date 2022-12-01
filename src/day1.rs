@@ -16,21 +16,19 @@ pub fn run() -> std::io::Result<()> {
     let mut elf_list: Vec<ElfEntry> = vec![];
 
     // assume valid input for now
-    if let Ok(lines) = read_lines("./data/day1.txt") {
-        for line in lines {
-            let line = line?;
-            if line.is_empty() {
-                if running_calories.is_none() {
-                    continue;
-                }
-                let new_entry = ElfEntry(running_calories.unwrap());
-                running_calories = None;
-                elf_list.push(new_entry);
-            } else {
-                let parsed_line = line.parse::<usize>();
-                let updated = running_calories.unwrap_or(0) + parsed_line.unwrap();
-                running_calories = Some(updated);
+    for line in read_lines("./data/day1.txt")? {
+        let line = line?;
+        if line.is_empty() {
+            if running_calories.is_none() {
+                continue;
             }
+            let new_entry = ElfEntry(running_calories.unwrap());
+            running_calories = None;
+            elf_list.push(new_entry);
+        } else {
+            let parsed_line = line.parse::<usize>();
+            let updated = running_calories.unwrap_or(0) + parsed_line.unwrap();
+            running_calories = Some(updated);
         }
     }
 
@@ -41,10 +39,10 @@ pub fn run() -> std::io::Result<()> {
     }
 
     elf_list.sort_by(|a, b| b.0.cmp(&a.0));
-    let max_cals: usize = elf_list[0].into();
+    let max_cals = elf_list.get(0).map_or(0, |x| (*x).into());
     println!("Max calories are {}", max_cals);
 
-    let sum_of_three: usize = elf_list
+    let sum_of_three = elf_list
         .into_iter()
         .take(3)
         .map(|x| x.into())
