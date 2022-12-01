@@ -41,9 +41,10 @@ pub fn run() -> std::io::Result<()> {
     }
 
     elf_list.sort_by(|a, b| b.0.cmp(&a.0));
-    println!("Max calories are {}", elf_list[0].0);
+    let max_cals: usize = elf_list[0].into();
+    println!("Max calories are {}", max_cals);
 
-    let sum_of_three : usize = elf_list
+    let sum_of_three: usize = elf_list
         .into_iter()
         .take(3)
         .map(|x| x.into())
