@@ -5,12 +5,12 @@ use std::io::BufReader;
 #[derive(Copy, Clone)]
 struct ElfEntry(usize);
 
-fn main() -> std::io::Result<()> {
+pub fn run() -> std::io::Result<()> {
     let mut running_calories: Option<usize> = None;
     let mut elf_list: Vec<ElfEntry> = vec![];
 
     // assume valid input for now
-    if let Ok(lines) = read_lines("./input.txt") {
+    if let Ok(lines) = read_lines("./data/day1.txt") {
         for line in lines {
             let line = line?;
             if line.is_empty() {
