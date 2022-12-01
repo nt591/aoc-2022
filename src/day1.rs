@@ -5,6 +5,12 @@ use std::io::BufReader;
 #[derive(Copy, Clone)]
 struct ElfEntry(usize);
 
+impl From<ElfEntry> for usize {
+    fn from(elf: ElfEntry) -> usize {
+        elf.0
+    }
+}
+
 pub fn run() -> std::io::Result<()> {
     let mut running_calories: Option<usize> = None;
     let mut elf_list: Vec<ElfEntry> = vec![];
@@ -37,10 +43,10 @@ pub fn run() -> std::io::Result<()> {
     elf_list.sort_by(|a, b| b.0.cmp(&a.0));
     println!("Max calories are {}", elf_list[0].0);
 
-    let sum_of_three = elf_list
-        .iter()
+    let sum_of_three : usize = elf_list
+        .into_iter()
         .take(3)
-        .map(|elf| elf.0)
+        .map(|x| x.into())
         .reduce(|acc, cal| acc + cal)
         .unwrap_or(0);
     println!("The sum of the highest three calories is {}", sum_of_three);
