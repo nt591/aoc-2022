@@ -13,6 +13,17 @@ enum Outcome {
     Draw,
 }
 
+impl Outcome {
+    fn new(val: &str) -> Self {
+        match val {
+            "X" => Outcome::Lose,
+            "Y" => Outcome::Draw,
+            "Z" => Outcome::Win,
+            _ => panic!(),
+        }
+    }
+}
+
 impl RockPaperScissors {
     fn loses_to(&self) -> Self {
         use RockPaperScissors::*;
@@ -32,6 +43,7 @@ impl RockPaperScissors {
         }
     }
 
+    #[allow(dead_code)]
     pub fn won(opp: Self, me: Self) -> Outcome {
         if me.loses_to() == opp {
             Outcome::Lose
@@ -42,16 +54,13 @@ impl RockPaperScissors {
         }
     }
 
-    pub fn new(val: &str) -> Option<Self> {
+    pub fn new(val: &str) -> Self {
         use RockPaperScissors::*;
         match val {
-            "A" => Some(Rock),
-            "B" => Some(Paper),
-            "C" => Some(Scissors),
-            "X" => Some(Rock),
-            "Y" => Some(Paper),
-            "Z" => Some(Scissors),
-            _ => None,
+            "A" => Rock,
+            "B" => Paper,
+            "C" => Scissors,
+            _ => panic!(),
         }
     }
 }
@@ -83,17 +92,17 @@ pub fn run() -> anyhow::Result<()> {
     let mut score: usize = 0;
     for line in read_lines("./data/day2.txt")? {
         let line = line?;
-        let results = line
-            .split(" ")
-            .filter_map(RockPaperScissors::new)
-            .take(2)
-            .collect::<Vec<RockPaperScissors>>();
-        debug_assert!(results.len() == 2);
+        let mut results = line.split_whitespace();
 
-        let opponent = results[0];
-        let myself = results[1];
+        let opponent = RockPaperScissors::new(results.next().unwrap());
+        let outcome = Outcome::new(results.next().unwrap());
+        let myself = match outcome {
+            Outcome::Win => opponent.loses_to(),
+            Outcome::Draw => opponent,
+            Outcome::Lose => opponent.wins_against(),
+        };
+        let outcome_score: usize = outcome.into();
         let my_score: usize = myself.into();
-        let outcome_score: usize = (RockPaperScissors::won(opponent, myself)).into();
         score += my_score;
         score += outcome_score;
     }
@@ -107,7 +116,7 @@ fn _test1() -> anyhow::Result<()> {
         let line = line?;
         let results = line
             .split(" ")
-            .filter_map(RockPaperScissors::new)
+            .map(RockPaperScissors::new)
             .take(2)
             .collect::<Vec<RockPaperScissors>>();
         debug_assert!(results.len() == 2);
