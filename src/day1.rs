@@ -1,8 +1,6 @@
+use crate::utils::read_lines;
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
 
 #[derive(Copy, Clone, Debug, Eq)]
 struct ElfEntry(usize);
@@ -73,7 +71,7 @@ pub fn run() -> std::io::Result<()> {
 
 fn push_into_heap_with_fixed_size<T>(heap: &mut BinaryHeap<T>, elem: T) -> ()
 where
-    T: Ord + std::fmt::Debug,
+    T: Ord,
 {
     // always push into heap, and if heap is too big then flush last out
     // todo: drain_sorted()
@@ -88,11 +86,4 @@ where
             heap.push(elem);
         }
     }
-}
-fn read_lines<P>(filename: P) -> std::io::Result<std::io::Lines<BufReader<File>>>
-where
-    P: AsRef<std::path::Path>,
-{
-    let file = File::open(filename)?;
-    Ok(BufReader::new(file).lines())
 }
