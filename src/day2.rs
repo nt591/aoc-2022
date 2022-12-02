@@ -14,25 +14,35 @@ enum Outcome {
 }
 
 impl RockPaperScissors {
-    pub fn won(opp: RockPaperScissors, me: RockPaperScissors) -> Outcome {
+    fn loses_to(&self) -> Self {
         use RockPaperScissors::*;
-        match (opp, me) {
-            (opp, me) if opp == Rock && me == Scissors => Outcome::Lose,
-            (opp, me) if opp == Scissors && me == Rock => Outcome::Win,
-            (opp, me) => {
-                let opp_score: usize = opp.into();
-                let my_score: usize = me.into();
-                if my_score > opp_score {
-                    Outcome::Win
-                } else if my_score < opp_score {
-                    Outcome::Lose
-                } else {
-                    Outcome::Draw
-                }
-            }
+        match self {
+            Rock => Paper,
+            Paper => Scissors,
+            Scissors => Rock,
         }
     }
-    fn new(val: &str) -> Option<Self> {
+
+    fn wins_against(&self) -> Self {
+        use RockPaperScissors::*;
+        match self {
+            Rock => Scissors,
+            Scissors => Paper,
+            Paper => Rock,
+        }
+    }
+
+    pub fn won(opp: Self, me: Self) -> Outcome {
+        if me.loses_to() == opp {
+            Outcome::Lose
+        } else if me.wins_against() == opp {
+            Outcome::Win
+        } else {
+            Outcome::Draw
+        }
+    }
+
+    pub fn new(val: &str) -> Option<Self> {
         use RockPaperScissors::*;
         match val {
             "A" => Some(Rock),
