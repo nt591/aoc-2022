@@ -79,9 +79,9 @@ mod tests {
     }
 
     #[test]
-    fn it_rejects_touching_but_not_containing_boundaries() {
+    fn it_allows_touching_but_not_containing_boundaries() {
         let left = ElfRange { start: 5, end: 7 };
         let right = ElfRange { start: 7, end: 9 };
-        assert_eq!(false, left.overlaps_with(&right))
+        assert!(left.overlaps_with(&right))
     }
 }
