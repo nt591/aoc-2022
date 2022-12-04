@@ -5,7 +5,12 @@ use std::collections::HashSet;
 pub fn run() -> anyhow::Result<()> {
     let content = include_str!("../data/day3.txt");
     let mut sum: usize = 0;
-    for mut group in &content.split_whitespace().collect::<Vec<&str>>().into_iter().chunks(3) {
+    for mut group in &content
+        .split_whitespace()
+        .collect::<Vec<&str>>()
+        .into_iter()
+        .chunks(3)
+    {
         let fst = group.next().unwrap();
         let snd = group.next().unwrap();
         let thd = group.next().unwrap();
@@ -42,8 +47,11 @@ fn find_repeat(fst: &str, snd: &str, thd: &str) -> anyhow::Result<char> {
     for ch in thd.chars() {
         thd_chars.insert(ch);
     }
-    let intersection_fst_and_second: HashSet<char> = fst_chars.intersection(&snd_chars).map(|c| *c).collect();
-    let intersection_all: HashSet<&char> = intersection_fst_and_second.intersection(&thd_chars).collect();
+    let intersection_fst_and_second: HashSet<char> =
+        fst_chars.intersection(&snd_chars).map(|c| *c).collect();
+    let intersection_all: HashSet<&char> = intersection_fst_and_second
+        .intersection(&thd_chars)
+        .collect();
 
     match intersection_all.len() {
         1 => Ok(*intersection_all.into_iter().next().unwrap()),
