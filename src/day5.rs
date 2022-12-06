@@ -66,8 +66,8 @@ impl Instruction {
         }
     }
 
-    fn apply_instruction(instruction: &Instruction, stacks: &mut Vec<Stack>) {
-        let from_stack = stacks
+    fn apply_instruction(instruction: &Instruction, crates: &mut Vec<Stack>) {
+        let from_stack = crates
             .get_mut(instruction.src() - 1)
             .expect("stack index from instruction does not exist");
 
@@ -75,7 +75,7 @@ impl Instruction {
             .drain((from_stack.len() - instruction.quantity() as usize)..)
             .collect_vec();
 
-        let to_stack = stacks
+        let to_stack = crates
             .get_mut(instruction.to() - 1)
             .expect("stack index from instruction does not exist");
 
