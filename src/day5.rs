@@ -136,17 +136,3 @@ pub fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_runs() {
-        assert!(true)
-    }
-
-    fn it_parses_crates() {
-        let test_input = "    [D]    
-[N] [C]    
-[Z] [M] [P]
- 1   2   3 ";
-    }
-}
