@@ -48,6 +48,8 @@ impl Instruction {
 
     pub fn apply_instructions(instructions: &Vec<Instruction>, crates: &mut Vec<Stack>) {
         for instruction in instructions.iter() {
+            /* Part 1
+
             for _ in 0..instruction.quantity() {
                 let from_crate = crates
                     .get_mut(instruction.src() - 1).expect("Invalid instruction src").pop();
@@ -59,7 +61,25 @@ impl Instruction {
                     to.push(c);
                 }
             }
+            */
+            Self::apply_instruction(&instruction, crates);
         }
+    }
+
+    fn apply_instruction(instruction: &Instruction, stacks: &mut Vec<Stack>) {
+        let from_stack = stacks
+            .get_mut(instruction.src() - 1)
+            .expect("stack index from instruction does not exist");
+
+        let mut crates_to_move = from_stack
+            .drain((from_stack.len() - instruction.quantity() as usize)..)
+            .collect_vec();
+
+        let to_stack = stacks
+            .get_mut(instruction.to() - 1)
+            .expect("stack index from instruction does not exist");
+
+        to_stack.append(&mut crates_to_move);
     }
 }
 
@@ -103,10 +123,13 @@ pub fn run() -> anyhow::Result<()> {
     let instructions = Instruction::parse_instruction(input)?;
     Instruction::apply_instructions(&instructions, &mut vec);
 
-    let top = vec.iter().map(|s| match s.last() {
-        Some(c) => c.val(),
-        None => ' '
-    }).join("");
+    let top = vec
+        .iter()
+        .map(|s| match s.last() {
+            Some(c) => c.val(),
+            None => ' ',
+        })
+        .join("");
     println!("{top}");
     Ok(())
 }
