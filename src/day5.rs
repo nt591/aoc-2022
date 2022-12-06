@@ -71,6 +71,8 @@ impl Instruction {
             .get_mut(instruction.src() - 1)
             .expect("stack index from instruction does not exist");
 
+        // we need to drain BEFORE getting to_stack, so we consume the mutable borrow
+        // of from_stack
         let mut crates_to_move = from_stack
             .drain((from_stack.len() - instruction.quantity() as usize)..)
             .collect_vec();
