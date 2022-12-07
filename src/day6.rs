@@ -40,7 +40,7 @@ mod tests {
 
     #[test]
     fn it_finds_14_idx_window() {
-    assert_eq!(Some(23), run_impl("bvwbjplbgvbhsrlpgdmjqwftvncz", 14));
+        assert_eq!(Some(23), run_impl("bvwbjplbgvbhsrlpgdmjqwftvncz", 14));
     }
 
     #[test]
