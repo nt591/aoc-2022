@@ -48,19 +48,26 @@ fn part1(root: &Rc<DirectoryFolder>) {
 fn recursive_size_map(node: &Rc<DirectoryFolder>) -> Vec<usize> {
     let mut sizes = vec![node.directory_size()];
     let dirs = node.directories.borrow();
-    let mut child_sizes = dirs.values().flat_map(|dir| recursive_size_map(dir)).collect::<Vec<usize>>();
+    let mut child_sizes = dirs
+        .values()
+        .flat_map(|dir| recursive_size_map(dir))
+        .collect::<Vec<usize>>();
     sizes.append(&mut child_sizes);
     sizes
 }
 
 fn part2(root: &Rc<DirectoryFolder>) {
-    let max_size : usize = 70000000;
+    let max_size: usize = 70000000;
     let free_space = max_size - root.directory_size();
     let goal = 30000000;
     let space_to_free = goal - free_space;
-    
+
     let sizes = recursive_size_map(&root);
-    let s= sizes.into_iter().sorted().find(|s| s >= &space_to_free).unwrap();
+    let s = sizes
+        .into_iter()
+        .sorted()
+        .find(|s| s >= &space_to_free)
+        .unwrap();
     println!("pt 2 {s}");
 }
 
