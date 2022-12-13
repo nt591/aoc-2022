@@ -9,8 +9,8 @@ type VisGraph = Vec<Vec<Visibility>>;
 fn map_visibility_values(vis: &Visibility) -> usize {
     use crate::day8::Visibility::*;
     match vis {
-        Visible => 0,
-        Invisible => 1,
+        Visible => 1,
+        Invisible => 0,
     }
 }
 
@@ -39,16 +39,29 @@ fn make_graph(input: &str) -> VisGraph {
             } else {
                 row.iter()
                     .enumerate()
-                    .map(|(col, num)| {
+                    .map(|(col, _num)| {
                         if col == 0 || col == (row_len - 1) {
                             Visible
                         } else {
-                            // compare to above, left, right, below
-                            let left = intermediate[idx][col - 1];
-                            let right = intermediate[idx][col + 1];
-                            let above = intermediate[idx - 1][col];
-                            let below = intermediate[idx + 1][col];
-                            if num > &left && num > &right && num > &above && num > &below {
+                            // look as far left, right, up, down
+                            // ensure this height > all of those
+                            let curr_value = intermediate[idx][col];
+                            let left = (0..col)
+                                .map(|x| intermediate[idx][x])
+                                .all(|left| left < curr_value);
+                            let right = (col + 1..row_len)
+                                .map(|x| intermediate[idx][x])
+                                .all(|right| right < curr_value);
+
+                            let above = (0..idx)
+                                .map(|y| intermediate[y][col])
+                                .all(|above| above < curr_value);
+
+                            let below = (idx + 1..intermediate.len())
+                                .map(|y| intermediate[y][col])
+                                .all(|below| below < curr_value);
+
+                            if above || below || left || right {
                                 Visible
                             } else {
                                 Invisible
@@ -62,7 +75,6 @@ fn make_graph(input: &str) -> VisGraph {
 }
 
 fn sum_graph_visibility(graph: VisGraph) -> usize {
-    println!("{:?}", graph);
     graph
         .iter()
         .map(|row| {
@@ -82,6 +94,7 @@ fn part1(input: &str) -> usize {
 pub fn run() -> anyhow::Result<()> {
     let input = include_str!("../data/day8.txt");
     let pt1 = part1(input);
+    println!("day 8 part 1 {pt1}");
     Ok(())
 }
 
